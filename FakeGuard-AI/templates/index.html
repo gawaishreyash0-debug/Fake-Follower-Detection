@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FakeGuard AI — Fake Follower Detection System</title>
+  <meta name="description" content="AI-powered fake follower detection system for Instagram account analysis using Machine Learning.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- Chart.js for data visualization -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body class="dark-theme">
+  <!-- App Layout -->
+  <div class="app-container">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="brand-logo">
+          <div class="logo-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <path d="m9 12 2 2 4-4"/>
+            </svg>
+          </div>
+          <div class="brand-text">
+            <span class="brand-name">FakeGuard<span class="gradient-text">.AI</span></span>
+            <span class="brand-badge">PROTOTYPE</span>
+          </div>
+        </div>
+        <button class="mobile-toggle" id="sidebarCloseBtn" aria-label="Close sidebar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-group-label">MAIN DASHBOARD</div>
+        <a href="#overview" class="nav-item active" data-section="overview">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+          <span>Dashboard Overview</span>
+        </a>
+        <a href="#analyze" class="nav-item" data-section="analyze">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+          <span>Analyze Account</span>
+          <span class="nav-pill">Interactive</span>
+        </a>
+        <a href="#upload" class="nav-item" data-section="upload">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+          <span>Upload CSV Dataset</span>
+        </a>
+        <a href="#results" class="nav-item" data-section="results">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>
+          <span>Analysis Results</span>
+          <span class="nav-pill live-badge" id="resultsCountBadge">0</span>
+        </a>
+        <a href="#distribution" class="nav-item" data-section="distribution">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
+          <span>Risk Distribution</span>
+        </a>
+
+        <div class="nav-group-label">INSIGHTS & ARCHIVE</div>
+        <a href="#history" class="nav-item" data-section="history">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/><path d="M3.05 11a9 9 0 0 1 .5-2m1.9-3.4A9 9 0 0 1 11 3.05"/></svg>
+          <span>Analysis History</span>
+        </a>
+        <a href="#reports" class="nav-item" data-section="reports">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          <span>Reports & Export</span>
+        </a>
+        <a href="#methodology" class="nav-item" data-section="methodology">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
+          <span>Methodology</span>
+        </a>
+        <a href="#settings" class="nav-item" data-section="settings">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          <span>Settings</span>
+        </a>
+      </nav>
+
+      <!-- Sidebar Footer Status -->
+      <div class="sidebar-footer">
+        <div class="model-status-chip">
+          <span class="status-indicator online"></span>
+          <div class="status-text">
+            <span class="status-title">Random Forest ML</span>
+            <span class="status-sub">Active • Joblib Pipeline</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <!-- Top Header Bar -->
+      <header class="top-header">
+        <div class="header-left">
+          <button class="mobile-toggle-btn" id="mobileMenuOpenBtn" aria-label="Open Menu">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" x2="21" y1="12" y2="12"/><line x1="3" x2="21" y1="6" y2="6"/><line x1="3" x2="21" y1="18" y2="18"/></svg>
+          </button>
+          <div class="page-title-box">
+            <h1 class="page-title" id="pageTitleHeading">Dashboard Overview</h1>
+            <p class="page-subtitle" id="pageSubtitleText">Real-time Instagram account suspicious pattern detection</p>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <button class="btn btn-secondary btn-sm" id="loadDemoSampleBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/><polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/></svg>
+            <span>Load Demo Data</span>
+          </button>
+          <button class="btn btn-secondary btn-sm" id="downloadSampleCsvBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+            <span>Sample CSV</span>
+          </button>
+          <button class="btn btn-primary btn-sm" id="headerUploadBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+            <span>Upload Dataset</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Scrollable Main Container -->
+      <div class="content-body">
+        
+        <!-- ==================== SECTION 1: DASHBOARD OVERVIEW ==================== -->
+        <section id="overview-section" class="view-section active">
+          
+          <!-- Key Metrics Cards -->
+          <div class="metrics-grid">
+            <div class="metric-card total-card">
+              <div class="metric-header">
+                <span class="metric-label">TOTAL ACCOUNTS</span>
+                <div class="metric-icon total-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </div>
+              </div>
+              <div class="metric-body">
+                <span class="metric-value" id="statTotalAccounts">20</span>
+                <span class="metric-subtext">Processed dataset records</span>
+              </div>
+              <div class="metric-progress-track">
+                <div class="metric-progress-fill" style="width: 100%;"></div>
+              </div>
+            </div>
+
+            <div class="metric-card low-card">
+              <div class="metric-header">
+                <span class="metric-label">LOW RISK (&lt;40%)</span>
+                <div class="metric-icon low-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+              </div>
+              <div class="metric-body">
+                <span class="metric-value" id="statLowRisk">7</span>
+                <span class="metric-subtext" id="statLowPercent">35.0% of cohort</span>
+              </div>
+              <div class="metric-progress-track">
+                <div class="metric-progress-fill low-fill" id="statLowFill" style="width: 35%;"></div>
+              </div>
+            </div>
+
+            <div class="metric-card med-card">
+              <div class="metric-header">
+                <span class="metric-label">MEDIUM RISK (40-70%)</span>
+                <div class="metric-icon med-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+                </div>
+              </div>
+              <div class="metric-body">
+                <span class="metric-value" id="statMedRisk">5</span>
+                <span class="metric-subtext" id="statMedPercent">25.0% of cohort</span>
+              </div>
+              <div class="metric-progress-track">
+                <div class="metric-progress-fill med-fill" id="statMedFill" style="width: 25%;"></div>
+              </div>
+            </div>
+
+            <div class="metric-card high-card">
+              <div class="metric-header">
+                <span class="metric-label">HIGH RISK (&ge;70%)</span>
+                <div class="metric-icon high-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>
+                </div>
+              </div>
+              <div class="metric-body">
+                <span class="metric-value" id="statHighRisk">8</span>
+                <span class="metric-subtext" id="statHighPercent">40.0% of cohort</span>
+              </div>
+              <div class="metric-progress-track">
+                <div class="metric-progress-fill high-fill" id="statHighFill" style="width: 40%;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Charts Row -->
+          <div class="dashboard-grid-2col">
+            <!-- Risk Breakdown Chart Card -->
+            <div class="glass-card chart-card">
+              <div class="card-header">
+                <div>
+                  <h3 class="card-title">Risk Category Breakdown</h3>
+                  <p class="card-subtitle">Distribution across defined probability thresholds</p>
+                </div>
+                <span class="badge badge-purple">Random Forest</span>
+              </div>
+              <div class="chart-wrapper doughnut-chart-box">
+                <canvas id="riskDoughnutChart"></canvas>
+              </div>
+              <div class="chart-legend-box" id="doughnutLegendBox">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+
+            <!-- Followers vs Risk Score Relationship Card -->
+            <div class="glass-card chart-card">
+              <div class="card-header">
+                <div>
+                  <h3 class="card-title">Risk Score vs Follower Distribution</h3>
+                  <p class="card-subtitle">Audited accounts categorized by suspicious probability</p>
+                </div>
+                <span class="badge badge-blue">Cohort Scatter</span>
+              </div>
+              <div class="chart-wrapper">
+                <canvas id="engagementBarChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Preview Table -->
+          <div class="glass-card mt-6">
+            <div class="card-header flex-between">
+              <div>
+                <h3 class="card-title">Recent Analysis Highlights</h3>
+                <p class="card-subtitle">Top flagged and audited records from current dataset</p>
+              </div>
+              <div class="card-actions">
+                <button class="btn btn-outline btn-sm" id="viewAllResultsBtn">
+                  <span>View All Results Table</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="table-container">
+              <table class="data-table" id="overviewPreviewTable">
+                <thead>
+                  <tr>
+                    <th>Username</th>
+                    <th>Account Age</th>
+                    <th>Followers</th>
+                    <th>Following</th>
+                    <th>Engagement Rate</th>
+                    <th>Risk Score</th>
+                    <th>Category</th>
+                    <th>Key Warning Signal</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="overviewPreviewTableBody">
+                  <!-- Populated by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== SECTION 2: ANALYZE ACCOUNT (SINGLE INSPECTOR) ==================== -->
+        <section id="analyze-section" class="view-section">
+          <div class="glass-card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Single Account Inspector (Live Simulator)</h3>
+                <p class="card-subtitle">Simulate and evaluate individual Instagram profile metrics in real-time through the ML engine</p>
+              </div>
+              <span class="badge badge-purple">Scikit-learn Pipeline</span>
+            </div>
+
+            <div class="analyzer-grid">
+              <!-- Form Column -->
+              <form id="singleAccountForm" class="analyzer-form">
+                <div class="form-row">
+                  <div class="form-group col-12">
+                    <label for="singleUsername">Target Instagram Username</label>
+                    <div class="input-with-icon">
+                      <span class="input-icon">@</span>
+                      <input type="text" id="singleUsername" class="form-input" placeholder="e.g. suspicious_bot_99" value="demo_target_user" required>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-grid-3">
+                  <div class="form-group">
+                    <label for="singleAge">Account Age (Days)</label>
+                    <input type="number" id="singleAge" class="form-input" min="0" value="14" required>
+                    <span class="form-hint">&lt;30 days triggers age warning</span>
+                  </div>
+                  <div class="form-group">
+                    <label for="singleFollowers">Followers Count</label>
+                    <input type="number" id="singleFollowers" class="form-input" min="0" value="45" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="singleFollowing">Following Count</label>
+                    <input type="number" id="singleFollowing" class="form-input" min="0" value="3800" required>
+                    <span class="form-hint">Ratio &gt; 2.5 flags mass-following</span>
+                  </div>
+                </div>
+
+                <div class="form-grid-3">
+                  <div class="form-group">
+                    <label for="singlePosts">Posts Count</label>
+                    <input type="number" id="singlePosts" class="form-input" min="0" value="1" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="singleLikes">Average Likes per Post</label>
+                    <input type="number" id="singleLikes" class="form-input" min="0" step="0.1" value="0.5" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="singleComments">Average Comments</label>
+                    <input type="number" id="singleComments" class="form-input" min="0" step="0.1" value="0.0" required>
+                  </div>
+                </div>
+
+                <div class="form-grid-3">
+                  <div class="form-group">
+                    <label for="singleHasPic">Profile Picture Available</label>
+                    <select id="singleHasPic" class="form-select">
+                      <option value="1">Yes (Custom Profile Pic)</option>
+                      <option value="0" selected>No (Default Avatar)</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="singleBioLen">Biography Length (chars)</label>
+                    <input type="number" id="singleBioLen" class="form-input" min="0" value="0" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="singleRepComments">Repetitive Comments Count</label>
+                    <input type="number" id="singleRepComments" class="form-input" min="0" value="4" required>
+                    <span class="form-hint">&ge;3 flags automated spam</span>
+                  </div>
+                </div>
+
+                <div class="form-actions mt-4">
+                  <button type="submit" class="btn btn-primary" id="runSingleAnalysisBtn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    <span>Run ML Detection</span>
+                  </button>
+                  <button type="button" class="btn btn-secondary" id="loadSuspiciousPresetBtn">Preset: High Risk Bot</button>
+                  <button type="button" class="btn btn-secondary" id="loadLegitPresetBtn">Preset: Organic Profile</button>
+                </div>
+              </form>
+
+              <!-- Live Prediction Meter Column -->
+              <div class="analyzer-output-box">
+                <div class="prediction-card" id="singlePredictionCard">
+                  <span class="prediction-title">DETECTION ASSESSMENT</span>
+                  <div class="gauge-circle-container">
+                    <div class="gauge-circle" id="singleGaugeCircle">
+                      <div class="gauge-inner">
+                        <span class="gauge-value" id="singleRiskScoreDisplay">89.4%</span>
+                        <span class="gauge-label">Risk Probability</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="risk-badge-box">
+                    <span class="risk-badge badge-high" id="singleRiskBadge">High Risk Account</span>
+                  </div>
+                  <p class="risk-summary-note" id="singleRiskSummaryNote">
+                    High likelihood of automated bot or non-authentic profile activity based on features.
+                  </p>
+
+                  <!-- Warning Signals Box -->
+                  <div class="warning-signals-container">
+                    <div class="warning-title">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+                      <span>Independent Heuristic Signals:</span>
+                    </div>
+                    <ul class="warning-list" id="singleWarningList">
+                      <li>Account created recently (&lt; 30 days old)</li>
+                      <li>Extreme follow-to-follower asymmetry</li>
+                      <li>Missing profile picture (default avatar)</li>
+                      <li>Elevated repetitive comment spam detected (4 flags)</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== SECTION 3: UPLOAD CSV DATASET ==================== -->
+        <section id="upload-section" class="view-section">
+          <div class="glass-card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Upload Instagram Followers Dataset</h3>
+                <p class="card-subtitle">Analyze batches of accounts in CSV format. Maximum file size: 5 MB.</p>
+              </div>
+              <button class="btn btn-outline btn-sm" id="uploadDownloadSampleBtn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                <span>Download Sample CSV</span>
+              </button>
+            </div>
+
+            <!-- Drag and Drop Zone -->
+            <div class="upload-dropzone" id="dropzone">
+              <input type="file" id="fileInput" accept=".csv" class="file-input-hidden">
+              <div class="dropzone-content">
+                <div class="upload-icon-circle">
+                  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+                </div>
+                <h4 class="dropzone-title">Drag and drop your account CSV here</h4>
+                <p class="dropzone-desc">or click anywhere in the box to browse your computer</p>
+                <div class="file-badges">
+                  <span class="file-badge">.CSV format only</span>
+                  <span class="file-badge">Strict 10-column schema</span>
+                  <span class="file-badge">Up to 5 MB</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Upload Progress & Selected File Info -->
+            <div class="selected-file-card hidden" id="selectedFileCard">
+              <div class="file-info-row">
+                <div class="file-name-meta">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  <div>
+                    <span class="file-name-display" id="selectedFileName">dataset.csv</span>
+                    <span class="file-size-display" id="selectedFileSize">12.4 KB</span>
+                  </div>
+                </div>
+                <button class="btn-icon" id="removeSelectedFileBtn" aria-label="Remove File">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                </button>
+              </div>
+
+              <!-- Upload Progress bar -->
+              <div class="progress-bar-container" id="uploadProgressBarContainer">
+                <div class="progress-bar-fill" id="uploadProgressBarFill" style="width: 0%;"></div>
+              </div>
+
+              <div class="file-actions-row">
+                <button class="btn btn-primary" id="startUploadBtn">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                  <span>Analyze Dataset Now</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Validation Requirements Table -->
+            <div class="mt-8">
+              <h4 class="schema-heading">Required CSV Column Specification</h4>
+              <p class="schema-sub">Every uploaded CSV must strictly contain these exact 10 column names:</p>
+              
+              <div class="schema-table-wrapper">
+                <table class="schema-table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Column Name</th>
+                      <th>Expected Type</th>
+                      <th>Model Usage</th>
+                      <th>Validation Constraint</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>1</td><td><code>username</code></td><td>String</td><td>Identifier</td><td>Non-empty profile handle (excluded from model)</td></tr>
+                    <tr><td>2</td><td><code>account_age_days</code></td><td>Integer / Float</td><td>Model Feature #1</td><td>Non-negative (&ge; 0). &lt;30 flags new account</td></tr>
+                    <tr><td>3</td><td><code>followers_count</code></td><td>Integer / Float</td><td>Model Feature #2</td><td>Non-negative count (&ge; 0)</td></tr>
+                    <tr><td>4</td><td><code>following_count</code></td><td>Integer / Float</td><td>Model Feature #3</td><td>Non-negative count (&ge; 0)</td></tr>
+                    <tr><td>5</td><td><code>posts_count</code></td><td>Integer / Float</td><td>Model Feature #4</td><td>Non-negative count (&ge; 0)</td></tr>
+                    <tr><td>6</td><td><code>avg_likes</code></td><td>Float</td><td>Model Feature #5</td><td>Non-negative average likes per post (&ge; 0)</td></tr>
+                    <tr><td>7</td><td><code>avg_comments</code></td><td>Float</td><td>Model Feature #6</td><td>Non-negative average comments per post (&ge; 0)</td></tr>
+                    <tr><td>8</td><td><code>has_profile_pic</code></td><td>Binary (0 or 1)</td><td>Model Feature #7</td><td>1 = custom photo, 0 = default avatar</td></tr>
+                    <tr><td>9</td><td><code>bio_length</code></td><td>Integer / Float</td><td>Model Feature #8</td><td>Non-negative character length (&ge; 0)</td></tr>
+                    <tr><td>10</td><td><code>repetitive_comments</code></td><td>Integer / Float</td><td>Model Feature #9</td><td>Non-negative count of repetitive spam comments</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== SECTION 4: ACCOUNT ANALYSIS RESULTS ==================== -->
+        <section id="results-section" class="view-section">
+          <div class="glass-card">
+            
+            <!-- Table Toolbar -->
+            <div class="results-toolbar">
+              <div class="search-box">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" x2="16.65" y1="21" y2="16.65"/></svg>
+                <input type="text" id="tableSearchInput" placeholder="Search by username..." class="search-input">
+                <button class="clear-search-btn hidden" id="clearSearchBtn">&times;</button>
+              </div>
+
+              <div class="filter-group">
+                <label for="riskFilterSelect" class="filter-label">Filter Risk:</label>
+                <select id="riskFilterSelect" class="filter-select">
+                  <option value="ALL">All Categories</option>
+                  <option value="Low Risk">Low Risk (&lt;40%)</option>
+                  <option value="Medium Risk">Medium Risk (40-70%)</option>
+                  <option value="High Risk">High Risk (&ge;70%)</option>
+                </select>
+              </div>
+
+              <div class="filter-group">
+                <label for="sortBySelect" class="filter-label">Sort By:</label>
+                <select id="sortBySelect" class="filter-select">
+                  <option value="risk_score_desc">Risk Score (Highest First)</option>
+                  <option value="risk_score_asc">Risk Score (Lowest First)</option>
+                  <option value="followers_desc">Followers (High to Low)</option>
+                  <option value="following_desc">Following (High to Low)</option>
+                  <option value="age_asc">Account Age (Newest First)</option>
+                </select>
+              </div>
+
+              <div class="toolbar-actions">
+                <button class="btn btn-outline btn-sm" id="exportResultsCsvBtn">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                  <span>Export CSV</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Results Data Table -->
+            <div class="table-container full-results-table">
+              <table class="data-table" id="mainResultsTable">
+                <thead>
+                  <tr>
+                    <th>Username</th>
+                    <th>Account Age</th>
+                    <th>Followers</th>
+                    <th>Following</th>
+                    <th>Posts</th>
+                    <th>Avg Likes</th>
+                    <th>Avg Comments</th>
+                    <th>Risk Score</th>
+                    <th>Risk Category</th>
+                    <th>Warning Signals</th>
+                    <th>Details</th>
+                  </tr>
+                </thead>
+                <tbody id="mainResultsTableBody">
+                  <!-- Populated by JS -->
+                </tbody>
+              </table>
+
+              <!-- Empty State -->
+              <div class="empty-state hidden" id="tableEmptyState">
+                <div class="empty-icon">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" x2="16.65" y1="21" y2="16.65"/><line x1="8" x2="14" y1="11" y2="11"/></svg>
+                </div>
+                <h4 class="empty-title">No matching accounts found</h4>
+                <p class="empty-desc">Try clearing your search query or switching your risk filter.</p>
+                <button class="btn btn-secondary btn-sm" id="resetTableFiltersBtn">Reset Filters</button>
+              </div>
+            </div>
+
+            <!-- Table Pagination -->
+            <div class="table-pagination-row">
+              <div class="pagination-info" id="paginationInfo">
+                Showing 1 to 10 of 20 accounts
+              </div>
+              <div class="pagination-controls">
+                <button class="btn-page" id="prevPageBtn" disabled>&laquo; Prev</button>
+                <div class="page-numbers" id="pageNumbersContainer">
+                  <span class="page-num active">1</span>
+                </div>
+                <button class="btn-page" id="nextPageBtn">Next &raquo;</button>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ==================== SECTION 5: RISK DISTRIBUTION ==================== -->
+        <section id="distribution-section" class="view-section">
+          <div class="dashboard-grid-2col">
+            <div class="glass-card">
+              <div class="card-header">
+                <div>
+                  <h3 class="card-title">Cohort Risk Classification</h3>
+                  <p class="card-subtitle">Aggregated probability segmentation</p>
+                </div>
+              </div>
+              <div class="chart-wrapper lg-chart">
+                <canvas id="detailedDoughnutChart"></canvas>
+              </div>
+            </div>
+
+            <div class="glass-card">
+              <div class="card-header">
+                <div>
+                  <h3 class="card-title">Following vs Followers Asymmetry</h3>
+                  <p class="card-subtitle">Identifying mass-follow bots and ghost accounts</p>
+                </div>
+              </div>
+              <div class="chart-wrapper lg-chart">
+                <canvas id="scatterAsymmetryChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <div class="glass-card mt-6">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Threshold Sensitivity & Distribution Analysis</h3>
+                <p class="card-subtitle">Comparative threshold analysis according to project specifications</p>
+              </div>
+            </div>
+            <div class="distribution-summary-grid">
+              <div class="summary-pill-card pill-low">
+                <span class="pill-title">LOW RISK TIER (&lt; 40%)</span>
+                <span class="pill-val" id="distLowCount">7 Accounts (35%)</span>
+                <p class="pill-desc">Exhibits organic engagement, established account longevity, natural follower-to-following ratios, and minimal comment repetition.</p>
+              </div>
+              <div class="summary-pill-card pill-med">
+                <span class="pill-title">MEDIUM RISK TIER (40% - 69.9%)</span>
+                <span class="pill-val" id="distMedCount">5 Accounts (25%)</span>
+                <p class="pill-desc">Borderline profiles exhibiting anomalous engagement drops, mild follow-rate spikes, or low biography completion.</p>
+              </div>
+              <div class="summary-pill-card pill-high">
+                <span class="pill-title">HIGH RISK TIER (&ge; 70%)</span>
+                <span class="pill-val" id="distHighCount">8 Accounts (40%)</span>
+                <p class="pill-desc">Accounts with extreme follow-to-follower ratios, missing avatars, near-zero engagement, and repetitive spam signals.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== SECTION 6: ANALYSIS HISTORY ==================== -->
+        <section id="history-section" class="view-section">
+          <div class="glass-card">
+            <div class="card-header flex-between">
+              <div>
+                <h3 class="card-title">Dataset Analysis History</h3>
+                <p class="card-subtitle">Audit log of datasets evaluated in this session</p>
+              </div>
+              <button class="btn btn-outline btn-sm" id="clearHistoryBtn">Clear History</button>
+            </div>
+
+            <div class="table-container">
+              <table class="data-table" id="historyTable">
+                <thead>
+                  <tr>
+                    <th>Timestamp</th>
+                    <th>Batch / Filename</th>
+                    <th>Total Accounts</th>
+                    <th>Low Risk</th>
+                    <th>Med Risk</th>
+                    <th>High Risk</th>
+                    <th>High Risk %</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="historyTableBody">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== SECTION 7: REPORTS AND EXPORT ==================== -->
+        <section id="reports-section" class="view-section">
+          <div class="glass-card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Executive Summary & Audit Report</h3>
+                <p class="card-subtitle">Generate official evaluation summaries and download structured audit results</p>
+              </div>
+              <button class="btn btn-primary" id="reportsDownloadCsvBtn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                <span>Download Complete CSV Report</span>
+              </button>
+            </div>
+
+            <div class="report-summary-box">
+              <div class="report-meta-grid">
+                <div class="meta-item">
+                  <span class="meta-label">Audit Engine</span>
+                  <span class="meta-value">FakeGuard AI v1.0 (Random Forest)</span>
+                </div>
+                <div class="meta-item">
+                  <span class="meta-label">Audit Scope</span>
+                  <span class="meta-value" id="reportScopeCount">20 Accounts Evaluated</span>
+                </div>
+                <div class="meta-item">
+                  <span class="meta-label">Overall Cohort Average Risk</span>
+                  <span class="meta-value" id="reportAvgRiskScore">48.2%</span>
+                </div>
+                <div class="meta-item">
+                  <span class="meta-label">Evaluation Date</span>
+                  <span class="meta-value" id="reportTimestampDisplay">Today</span>
+                </div>
+              </div>
+
+              <div class="report-narrative mt-6">
+                <h4 class="narrative-heading">Executive Findings & Risk Assessment</h4>
+                <p class="narrative-p" id="reportNarrativeP">
+                  Analysis indicates that <strong>40.0%</strong> of audited accounts fall within the <strong>High Risk</strong> category (&ge; 70% probability of non-authentic activity), primarily driven by extreme follow-to-follower asymmetry and repetitive spam comments.
+                </p>
+              </div>
+            </div>
+
+            <!-- Report Table Preview -->
+            <div class="mt-6">
+              <h4 class="table-preview-title">Report Content Preview</h4>
+              <div class="table-container">
+                <table class="data-table" id="reportPreviewTable">
+                  <thead>
+                    <tr>
+                      <th>Username</th>
+                      <th>Risk Score</th>
+                      <th>Risk Category</th>
+                      <th>Flagged Warning Signals</th>
+                      <th>Account Age</th>
+                      <th>Followers</th>
+                      <th>Following</th>
+                    </tr>
+                  </thead>
+                  <tbody id="reportPreviewTableBody">
+                    <!-- Populated by JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== SECTION 8: METHODOLOGY ==================== -->
+        <section id="methodology-section" class="view-section">
+          <div class="glass-card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Technical Methodology & System Architecture</h3>
+                <p class="card-subtitle">Comprehensive explanation of model pipeline, preprocessing behavior, and classification thresholds</p>
+              </div>
+              <span class="badge badge-purple">Academic Documentation</span>
+            </div>
+
+            <div class="methodology-content">
+              
+              <!-- Academic Prototype Notice -->
+              <div class="methodology-notice-banner">
+                <div class="notice-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>
+                </div>
+                <div class="notice-text">
+                  <h5>Academic Prototype & Synthetic Training Data Disclaimer</h5>
+                  <p>
+                    FakeGuard AI is developed as an academic engineering prototype. The detection model is trained on a synthetic dataset structured to simulate common behavioral patterns of social media bots and authentic accounts. <strong>Performance on synthetic demonstration datasets does not constitute empirical proof of real-world Instagram accuracy.</strong> Real-world production deployment requires a representative, ethically collected, and manually audited dataset.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Subsection 1: ML Pipeline Architecture -->
+              <div class="methodology-block">
+                <h4>1. Machine Learning Pipeline Architecture</h4>
+                <p>
+                  The system employs an end-to-end <strong>Scikit-learn Pipeline</strong> serialized using <strong>Joblib</strong>:
+                </p>
+                <div class="pipeline-flow-diagram">
+                  <div class="flow-step">
+                    <span class="step-badge">Input</span>
+                    <span class="step-title">CSV / JSON Payload</span>
+                    <span class="step-desc">10-column input (username separated)</span>
+                  </div>
+                  <div class="flow-arrow">&rarr;</div>
+                  <div class="flow-step">
+                    <span class="step-badge">Stage 1</span>
+                    <span class="step-title">Zero-Fill Preprocessing</span>
+                    <span class="step-desc">Prototype replaces missing numeric entries with 0</span>
+                  </div>
+                  <div class="flow-arrow">&rarr;</div>
+                  <div class="flow-step">
+                    <span class="step-badge">Stage 2</span>
+                    <span class="step-title">Pipeline SimpleImputer</span>
+                    <span class="step-desc">Median strategy imputer defensive safeguard</span>
+                  </div>
+                  <div class="flow-arrow">&rarr;</div>
+                  <div class="flow-step">
+                    <span class="step-badge">Stage 3</span>
+                    <span class="step-title">Random Forest Classifier</span>
+                    <span class="step-desc">100 estimators, balanced class weights</span>
+                  </div>
+                  <div class="flow-arrow">&rarr;</div>
+                  <div class="flow-step">
+                    <span class="step-badge">Output</span>
+                    <span class="step-title">Class Probability</span>
+                    <span class="step-desc">Suspicious probability estimate 0.0 – 1.0</span>
+                  </div>
+                </div>
+
+                <div class="callout-box">
+                  <strong>Documentation of Imputation Interaction:</strong>
+                  Per the project report specifications, prototype data preprocessing fills missing numeric values with zero before prediction. The underlying Scikit-learn Pipeline additionally encapsulates a <code>SimpleImputer(strategy='median')</code> step. This dual architecture ensures that even when arbitrary external inputs bypass the prototype preprocessor, the serialized pipeline gracefully handles missing values without runtime failure.
+                </div>
+              </div>
+
+              <!-- Subsection 2: 9 Input Features -->
+              <div class="methodology-block">
+                <h4>2. The Nine Model Features</h4>
+                <p>
+                  To preserve user privacy and prevent lexical bias, the <code>username</code> is used strictly as an identifier and is <strong>never</strong> fed into the Random Forest model. Exactly 9 numeric features are analyzed:
+                </p>
+                <ul class="methodology-feature-list">
+                  <li><strong>account_age_days:</strong> Total active lifespan of the account in days.</li>
+                  <li><strong>followers_count:</strong> Number of accounts subscribed to this profile.</li>
+                  <li><strong>following_count:</strong> Number of accounts this profile follows.</li>
+                  <li><strong>posts_count:</strong> Total number of public media posts.</li>
+                  <li><strong>avg_likes:</strong> Mean number of likes received per post.</li>
+                  <li><strong>avg_comments:</strong> Mean number of comments received per post.</li>
+                  <li><strong>has_profile_pic:</strong> Binary indicator (1 = custom avatar, 0 = default placeholder).</li>
+                  <li><strong>bio_length:</strong> Total character length of profile biography.</li>
+                  <li><strong>repetitive_comments:</strong> Frequency count of detected duplicate/spam comments.</li>
+                </ul>
+              </div>
+
+              <!-- Subsection 3: Exact Risk Categorization Thresholds -->
+              <div class="methodology-block">
+                <h4>3. Exact Risk Categorization Thresholds</h4>
+                <p>
+                  The Random Forest output probability $P(\text{Suspicious})$ is mapped to three risk categories:
+                </p>
+                <div class="table-container">
+                  <table class="data-table">
+                    <thead>
+                      <tr>
+                        <th>Probability Range</th>
+                        <th>Classification</th>
+                        <th>Recommended Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><code>Below 40% (&lt; 0.40)</code></td>
+                        <td><span class="risk-badge badge-low">Low Risk</span></td>
+                        <td>Account verified as exhibiting organic social patterns.</td>
+                      </tr>
+                      <tr>
+                        <td><code>40% to below 70% [0.40, 0.70)</code></td>
+                        <td><span class="risk-badge badge-med">Medium Risk</span></td>
+                        <td>Anomalous engagement; manual review or secondary verification recommended.</td>
+                      </tr>
+                      <tr>
+                        <td><code>70% or above (&ge; 0.70)</code></td>
+                        <td><span class="risk-badge badge-high">High Risk</span></td>
+                        <td>Strong statistical pattern matching automated bot farms or ghost profiles.</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Subsection 4: Independent Heuristic Warning Signals -->
+              <div class="methodology-block">
+                <h4>4. Independent Rule-Based Warning Indicators</h4>
+                <p>
+                  FakeGuard AI features an <strong>independent explanation module</strong> that evaluates deterministic heuristic rules in parallel with the machine learning model:
+                </p>
+                <div class="rules-grid">
+                  <div class="rule-card">
+                    <span class="rule-name">1. Fresh Account Age</span>
+                    <span class="rule-trigger">Trigger: <code>account_age_days &lt; 30</code></span>
+                    <p class="rule-desc">Flags newly registered accounts which frequently account for automated bot creation surges.</p>
+                  </div>
+                  <div class="rule-card">
+                    <span class="rule-name">2. Follow-Ratio Asymmetry</span>
+                    <span class="rule-trigger">Trigger: <code>following / followers &gt; 2.5</code></span>
+                    <p class="rule-desc">Identifies mass-follow / follow-for-follow scripts attempting to artificially inflate follower counts.</p>
+                  </div>
+                  <div class="rule-card">
+                    <span class="rule-name">3. Ghost Engagement</span>
+                    <span class="rule-trigger">Trigger: <code>likes / followers &lt; 0.005</code></span>
+                    <p class="rule-desc">Highlights accounts with high follower counts but negligible interaction, indicative of purchased fake followers.</p>
+                  </div>
+                  <div class="rule-card">
+                    <span class="rule-name">4. Missing Profile Picture</span>
+                    <span class="rule-trigger">Trigger: <code>has_profile_pic == 0</code></span>
+                    <p class="rule-desc">Detects placeholder avatars common to throwaway accounts and mass spam bots.</p>
+                  </div>
+                  <div class="rule-card">
+                    <span class="rule-name">5. Repetitive Comment Spam</span>
+                    <span class="rule-trigger">Trigger: <code>repetitive_comments &ge; 3</code></span>
+                    <p class="rule-desc">Flags recurring identical promotional comments across multiple target profiles.</p>
+                  </div>
+                </div>
+                <div class="callout-box mt-4">
+                  <strong>Important Notice on Heuristic Separation:</strong>
+                  These warning signals are evaluated by a standalone rule module. They are <strong>not causal explanations</strong> of the Random Forest model's internal tree splits. The Random Forest generates its probability non-linearly across the complete 9-dimensional hyperspace.
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== SECTION 9: SETTINGS ==================== -->
+        <section id="settings-section" class="view-section">
+          <div class="glass-card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">System & Interface Settings</h3>
+                <p class="card-subtitle">Application configuration, display options, and system health status</p>
+              </div>
+            </div>
+
+            <div class="settings-form">
+              <div class="settings-group">
+                <h4 class="settings-group-title">Display Preferences</h4>
+                <div class="setting-item">
+                  <div>
+                    <span class="setting-title">Animations & Transitions</span>
+                    <span class="setting-desc">Enable smooth gradient animations and chart transitions</span>
+                  </div>
+                  <label class="toggle-switch">
+                    <input type="checkbox" id="settingAnimationsToggle" checked>
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+                <div class="setting-item">
+                  <div>
+                    <span class="setting-title">Compact Table Density</span>
+                    <span class="setting-desc">Display more account records per table screen</span>
+                  </div>
+                  <label class="toggle-switch">
+                    <input type="checkbox" id="settingCompactTableToggle">
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="settings-group mt-6">
+                <h4 class="settings-group-title">Model Threshold Inspection</h4>
+                <div class="threshold-sliders-grid">
+                  <div class="threshold-box">
+                    <span class="threshold-title">Low Risk Boundary</span>
+                    <span class="threshold-val">&lt; 40.0%</span>
+                    <span class="threshold-desc">Fixed per project specification</span>
+                  </div>
+                  <div class="threshold-box">
+                    <span class="threshold-title">Medium Risk Boundary</span>
+                    <span class="threshold-val">40.0% to 69.9%</span>
+                    <span class="threshold-desc">Fixed per project specification</span>
+                  </div>
+                  <div class="threshold-box">
+                    <span class="threshold-title">High Risk Boundary</span>
+                    <span class="threshold-val">&ge; 70.0%</span>
+                    <span class="threshold-desc">Fixed per project specification</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="settings-group mt-6">
+                <h4 class="settings-group-title">Backend & Model Engine Information</h4>
+                <div class="system-info-grid" id="systemInfoGrid">
+                  <div class="sys-info-item">
+                    <span class="sys-label">Classifier Engine</span>
+                    <span class="sys-val">RandomForestClassifier (100 Trees)</span>
+                  </div>
+                  <div class="sys-info-item">
+                    <span class="sys-label">Imputation Strategy</span>
+                    <span class="sys-val">SimpleImputer(strategy='median')</span>
+                  </div>
+                  <div class="sys-info-item">
+                    <span class="sys-label">Backend Framework</span>
+                    <span class="sys-val">Python 3.14 + Flask 3.1</span>
+                  </div>
+                  <div class="sys-info-item">
+                    <span class="sys-label">Persistence Format</span>
+                    <span class="sys-val">Joblib (.pkl)</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ==================== ACCOUNT DETAILS MODAL ==================== -->
+  <div class="modal-overlay hidden" id="accountDetailsModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-user-title">
+          <div class="avatar-circle" id="modalAvatarCircle">
+            <span id="modalAvatarInitials">US</span>
+          </div>
+          <div>
+            <h3 class="modal-username" id="modalUsername">@username</h3>
+            <span class="modal-profile-status" id="modalProfileStatus">Custom Profile Picture Available</span>
+          </div>
+        </div>
+        <button class="modal-close-btn" id="modalCloseBtn" aria-label="Close modal">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Probability Banner -->
+        <div class="modal-risk-banner" id="modalRiskBanner">
+          <div class="risk-score-big">
+            <span class="score-percent" id="modalRiskScore">82.4%</span>
+            <span class="score-sub">Suspicious Probability</span>
+          </div>
+          <div class="risk-meta">
+            <span class="risk-badge" id="modalRiskBadge">High Risk</span>
+            <p class="risk-eval-text" id="modalRiskEvalText">Strong statistical deviation indicating suspicious bot activity.</p>
+          </div>
+        </div>
+
+        <!-- 9 Numeric Feature Breakdown -->
+        <h4 class="modal-section-title">Feature Breakdown (Model Inputs)</h4>
+        <div class="modal-features-grid">
+          <div class="feature-item">
+            <span class="feat-label">Account Age</span>
+            <span class="feat-val" id="modalFeatAge">120 days</span>
+          </div>
+          <div class="feature-item">
+            <span class="feat-label">Followers Count</span>
+            <span class="feat-val" id="modalFeatFollowers">1,240</span>
+          </div>
+          <div class="feature-item">
+            <span class="feat-label">Following Count</span>
+            <span class="feat-val" id="modalFeatFollowing">450</span>
+          </div>
+          <div class="feature-item">
+            <span class="feat-label">Follower/Following Ratio</span>
+            <span class="feat-val" id="modalFeatRatio">2.75</span>
+          </div>
+          <div class="feature-item">
+            <span class="feat-label">Posts Count</span>
+            <span class="feat-val" id="modalFeatPosts">45</span>
+          </div>
+          <div class="feature-item">
+            <span class="feat-label">Avg Likes / Post</span>
+            <span class="feat-val" id="modalFeatLikes">98.5</span>
+          </div>
+          <div class="feature-item">
+            <span class="feat-label">Avg Comments / Post</span>
+            <span class="feat-val" id="modalFeatComments">12.1</span>
+          </div>
+          <div class="feature-item">
+            <span class="feat-label">Biography Length</span>
+            <span class="feat-val" id="modalFeatBio">85 chars</span>
+          </div>
+          <div class="feature-item">
+            <span class="feat-label">Repetitive Comments</span>
+            <span class="feat-val" id="modalFeatRepComments">0</span>
+          </div>
+        </div>
+
+        <!-- Warning Indicators -->
+        <h4 class="modal-section-title mt-4">Independent Rule-Based Warning Signals</h4>
+        <div class="modal-warnings-box" id="modalWarningsBox">
+          <ul class="modal-warnings-list" id="modalWarningsList">
+            <li>No warning signals triggered for this account.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="modalDoneBtn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay hidden" id="loadingOverlay">
+    <div class="loading-spinner-box">
+      <div class="spinner"></div>
+      <h4 class="loading-title">Analyzing Dataset with Random Forest...</h4>
+      <p class="loading-desc">Validating CSV schema, computing model probabilities, and evaluating warning signals</p>
+    </div>
+  </div>
+
+  <!-- Vanilla JS Application Script -->
+  <script src="/static/js/script.js"></script>
+</body>
+</html>
